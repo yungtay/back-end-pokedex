@@ -14,9 +14,13 @@ app.use(cors());
 app.use(express.json());
 app.use(middleware.errors)
 
-app.post("/users", userController.signUpUsers);
+app.post("/sign-up", userController.signUpUsers);
+app.get("/sessions", userController.getUser)
+
 app.get("/users/", userController.getUsers);
 app.get("/users/:email", userController.getUser);
+
+
 
 export async function init () {
   await connectDatabase();
