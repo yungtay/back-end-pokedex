@@ -45,17 +45,17 @@ describe("GET /pokemons", () => {
 
     await signUpUser()
     await createPokemon()
-    const response = await supertest(app).post("/sign-in").send(bodySignIn);
+    await supertest(app).post("/sign-in").send(bodySignIn);
     const pokemons = await supertest(app).get("/pokemons")
 
     expect(pokemons.status).toBe(401)    
   })
 
-  it("should answer with status 401 if authorization isn't present", async () => {
+  it("should answer with status 401 if authorization isn't valid", async () => {
 
     await signUpUser()
     await createPokemon()
-    const response = await supertest(app).post("/sign-in").send(bodySignIn);
+    await supertest(app).post("/sign-in").send(bodySignIn);
     const pokemons = await supertest(app).get("/pokemons").set('Authorization', `Bearer 123`)
 
     expect(pokemons.status).toBe(401)    

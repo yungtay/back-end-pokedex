@@ -13,12 +13,11 @@ export async function authorizationToken(req: Request, res: Response, next: Next
       const token = authorization.split("Bearer ")[1];
     
       const repository = getRepository(Session);
-      const session = await repository.findOne({ token });
-    
+      const session = await repository.findOne({ token });  
       if (!session) {
         return res.sendStatus(401);
       }
     
-      res.locals.id = session.id;
+      res.locals.id = session.userId;
       next();
   }

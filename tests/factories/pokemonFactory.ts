@@ -14,4 +14,5 @@ export async function createPokemon () {
   });
 
   await getRepository(Pokemon).save(pokemon);
+  return pokemon
 }
