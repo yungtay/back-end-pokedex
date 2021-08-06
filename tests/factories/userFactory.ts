@@ -15,6 +15,17 @@ export async function signUpUser () {
   return user;
 }
 
+export async function signInUser () {
+  const user = await getRepository(User).create({
+    email: "email@gmail.com",
+    password: bcrypt.hashSync("123456", 10)
+  });
+
+  await getRepository(User).save(user);
+
+  return user;
+}
+
 const bodySignUp = {
   email: faker.internet.email(),
   password: "123456",

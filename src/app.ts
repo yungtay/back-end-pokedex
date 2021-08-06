@@ -8,6 +8,7 @@ import connectDatabase from "./database";
 
 import * as userController from "./controllers/userController";
 import * as sessionController from "./controllers/sessionController"
+import * as pokemonController from './controllers/pokemonController'
 import * as middleware from './middlewares/middewares'
 
 const app = express();
@@ -16,9 +17,10 @@ app.use(express.json());
 app.use(middleware.errors)
 
 app.post("/sign-up", userController.signUpUsers);
-app.post("/sign-in", sessionController.signIn)
+app.post("/sign-in", sessionController.signIn);
+app.get("/pokemons",middleware.authorizationToken, pokemonController.getPokemons);
 
-app.get("/users/", userController.getUsers);
+app.get("/users", userController.getUsers);
 app.get("/users/:email", userController.getUser);
 
 

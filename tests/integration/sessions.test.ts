@@ -89,7 +89,6 @@ describe("POST /sign-in", () => {
       where: { userId: id }
     });
 
-    console.log(responseAfter)
     expect(response.body.token).toBe(responseAfter.token);
   });
 
