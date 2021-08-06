@@ -7,6 +7,7 @@ import "reflect-metadata";
 import connectDatabase from "./database";
 
 import * as userController from "./controllers/userController";
+import * as sessionController from "./controllers/sessionController"
 import * as middleware from './middlewares/middewares'
 
 const app = express();
@@ -15,7 +16,7 @@ app.use(express.json());
 app.use(middleware.errors)
 
 app.post("/sign-up", userController.signUpUsers);
-app.get("/sessions", userController.getUser)
+app.post("/sign-in", sessionController.signIn)
 
 app.get("/users/", userController.getUsers);
 app.get("/users/:email", userController.getUser);

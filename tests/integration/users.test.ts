@@ -2,7 +2,7 @@ import supertest from "supertest";
 import { getConnection } from "typeorm";
 
 import app, { init } from "../../src/app";
-import { body } from "../factories/userFactory";
+import { bodySignUp } from "../factories/userFactory";
 import { clearDatabase } from "../utils/database";
 import { getRepository } from "typeorm";
 import User from '../../src/entities/User'
@@ -20,26 +20,37 @@ afterAll(async () => {
   await getConnection().close();
 });
 
-describe("POST /users", () => {
+describe("POST /sign-up", () => {
   it("should answer with status 201", async () => {
 
-    const response = await supertest(app).post("/users").send(body);
+    const response = await supertest(app).post("/sign-up").send(bodySignUp);
 
     expect(response.status).toBe(201);
   });
 
-  it("after registering, the user must be able to verify the registered email", async () => {
+  it("after registering, must be able to verify the registered email", async () => {
 
-    const response = await supertest(app).post("/users").send(body);
+    const response = await supertest(app).post("/sign-up").send(bodySignUp);
     const responseAfter = await getRepository(User).findOne({
-      where: { email: body.email }
+      where: { email: bodySignUp.email }
     });
 
     expect(responseAfter).toEqual(
       expect.objectContaining({
-        email: body.email
+        email: bodySignUp.email
       })
     );
+  });
+
+  it("should respond with a 400 if the email isn't valid", async () => {
+    const body = {
+      email: "test",
+      password: "123456",
+      confirmPassword: "123456"
+    }
+    const response = await supertest(app).post("/sign-up").send(body);
+
+    expect(response.status).toBe(400);
   });
 
   it("should respond with a 400 if there is a missing field to register (email)", async () => {
@@ -47,7 +58,7 @@ describe("POST /users", () => {
       password: "123456",
       confirmPassword: "123456"
     }
-    const response = await supertest(app).post("/users").send(body);
+    const response = await supertest(app).post("/sign-up").send(body);
 
     expect(response.status).toBe(400);
   });
@@ -57,7 +68,7 @@ describe("POST /users", () => {
       email: faker.internet.email(),
       confirmPassword: "123456"
     }
-    const response = await supertest(app).post("/users").send(body);
+    const response = await supertest(app).post("/sign-up").send(body);
 
     expect(response.status).toBe(400);
   });
@@ -67,14 +78,14 @@ describe("POST /users", () => {
       email: faker.internet.email(),
       password: "123456",
     }
-    const response = await supertest(app).post("/users").send(body);
+    const response = await supertest(app).post("/sign-up").send(body);
 
     expect(response.status).toBe(400);
   });
 
   it("should respond with a 409 if the email is already registered", async () => {
-    await supertest(app).post("/users").send(body);
-    const response = await supertest(app).post("/users").send(body);
+    await supertest(app).post("/sign-up").send(bodySignUp);
+    const response = await supertest(app).post("/sign-up").send(bodySignUp);
 
     expect(response.status).toBe(409);
   });

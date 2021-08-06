@@ -7,9 +7,9 @@ export default class Session {
     id: number;
 
     @Column()
-    userId: string;
+    userId: number;
 
-    @ManyToOne(() => User, user => user.id)
+    @ManyToOne(() => User, user => user.id, { onDelete: 'CASCADE' })
     user: User;
 
     @Column()

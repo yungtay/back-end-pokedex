@@ -12,6 +12,6 @@ export default class User {
   @Column()
   password: string;
 
-  @OneToMany(() => Session, user => user.id)
+  @OneToMany(() => Session, user => user.id, { cascade: true })
   sessions: Session[]
 }
